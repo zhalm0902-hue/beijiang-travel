@@ -3,389 +3,294 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>北疆13日深度旅行攻略 · 2026中秋国庆</title>
+<title>北疆13日深度旅行攻略 · 方案B · 2026中秋国庆</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root {
-    --gold: #D4A02B; --gold-light: #F5E6C8; --forest: #2D5016;
-    --sky: #3B7DD8; --sky-light: #E8F0FE; --warm: #FBF7F0;
-    --text: #2C2C2C; --text-light: #666; --white: #FFFFFF;
-    --shadow: 0 2px 12px rgba(0,0,0,0.08); --radius: 12px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif; background: var(--warm); color: var(--text); line-height: 1.7; }
-  .hero { background: linear-gradient(135deg,#1a3a2a 0%,#2d5016 40%,#4a7a2e 100%); color: white; padding: 50px 20px 40px; text-align: center; position: relative; }
-  .hero h1 { font-size: 2em; font-weight: 700; letter-spacing: 2px; }
-  .hero .subtitle { font-size: 0.95em; margin-top: 8px; opacity: 0.85; }
-  .hero .meta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; font-size: 0.85em; }
-  .hero .meta span { background: rgba(255,255,255,0.12); padding: 4px 12px; border-radius: 20px; }
-  .day-nav { position: sticky; top: 0; z-index: 999; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #eee; padding: 8px 0; overflow-x: auto; white-space: nowrap; display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; }
-  .day-nav a { display: inline-block; padding: 4px 10px; font-size: 0.78em; color: var(--text); text-decoration: none; border-radius: 6px; transition: all 0.2s; }
-  .day-nav a:hover { background: var(--gold-light); color: var(--forest); font-weight: 600; }
-  .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-  .section { margin: 28px 0; }
-  .section-title { font-size: 1.2em; font-weight: 700; color: var(--forest); border-bottom: 3px solid var(--gold); padding-bottom: 8px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
-  #map { height: 450px; border-radius: var(--radius); margin-bottom: 14px; z-index: 1; }
-  .map-legend { font-size: 0.85em; padding: 6px 0; color: var(--text-light); }
-  .day-entry { margin-bottom: 20px; scroll-margin-top: 60px; }
-  .day-header { background: linear-gradient(135deg, var(--forest), #3a6b1e); color: white; padding: 12px 18px; border-radius: var(--radius) var(--radius) 0 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; cursor: pointer; }
-  .day-header.highlight { background: linear-gradient(135deg, #8B4513, var(--gold)); }
-  .day-header .day-num { font-size: 1.1em; font-weight: 700; }
-  .day-header .day-date { opacity: 0.85; font-size: 0.85em; }
-  .day-header .day-tag { background: var(--gold); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
-  .day-body { background: var(--white); padding: 14px 18px; border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); display: none; }
-  .day-body.open { display: block; }
-  .day-body .time-item { display: flex; gap: 10px; padding: 5px 0; border-bottom: 1px dashed #f0f0f0; }
-  .day-body .time-item:last-child { border-bottom: none; }
-  .time-item .time { color: var(--sky); font-weight: 600; white-space: nowrap; min-width: 75px; font-size: 0.85em; }
-  .time-item .desc { flex: 1; font-size: 0.9em; }
-  .activity-box { background: linear-gradient(135deg,#FFFDF5,#FFF8E7); border: 1px solid var(--gold-light); border-radius: 10px; padding: 12px 14px; margin: 8px 0; }
-  .activity-box .alabel { font-weight: 700; color: var(--gold); font-size: 0.8em; letter-spacing: 1px; }
-  .activity-box .adetail { font-size: 0.85em; color: var(--text-light); }
-  .highlight-item { display: flex; gap: 10px; padding: 10px 12px; margin-bottom: 8px; background: linear-gradient(135deg,#FFFDF5,#FFF8E7); border-radius: 8px; border-left: 3px solid var(--gold); }
-  .highlight-item .icon { font-size: 1.3em; }
-  .highlight-item .text { flex: 1; font-size: 0.92em; }
-  .highlight-item .text strong { color: var(--forest); }
-  .callout { padding: 12px 14px; border-radius: 8px; margin: 8px 0; font-size: 0.87em; }
-  .callout-warn { background: #FFF8E1; border-left: 4px solid #FFA000; }
-  .callout-info { background: var(--sky-light); border-left: 4px solid var(--sky); }
-  .callout-tip { background: #E8F5E9; border-left: 4px solid var(--forest); }
-  table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
-  th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #eee; }
-  th { background: var(--forest); color: white; font-weight: 600; font-size: 0.85em; }
-  tr:hover { background: #f9f9f9; }
-  .alt-plan { border: 2px dashed var(--gold); border-radius: var(--radius); padding: 16px; margin: 16px 0; background: #FFFDF5; }
-  .checklist-item { list-style: none; padding: 4px 0; display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
-  .checklist-item::before { content: '☐'; font-size: 1.1em; color: var(--gold); }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.82em; border-top: 1px solid #eee; margin-top: 30px; }
-  @media (max-width: 640px) {
-    .hero h1 { font-size: 1.5em; }
-    #map { height: 300px; }
-    .day-header { flex-direction: column; align-items: flex-start; }
-    .time-item { flex-direction: column; gap: 2px; }
-    .time-item .time { min-width: auto; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#D4A02B;--gold-light:#FFF8E7;--forest:#2D5016;--sky:#3B7DD8;--sky-light:#E8F0FE;--warm:#FBF7F0;--text:#2C2C2C;--text-light:#666;--white:#FFF;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;background:var(--warm);color:var(--text);line-height:1.7}
+.hero{background:linear-gradient(135deg,#1a3a2a,#2d5016 40%,#4a7a2e);color:#fff;padding:40px 20px 32px;text-align:center}
+.hero h1{font-size:1.8em;font-weight:700;letter-spacing:1px}
+.hero .sub{font-size:.9em;margin-top:6px;opacity:.85}
+.hero .meta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:.82em}
+.hero .meta span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:20px}
+.day-nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid #eee;padding:6px 0;overflow-x:auto;white-space:nowrap;text-align:center}
+.day-nav a{display:inline-block;padding:3px 9px;font-size:.75em;color:var(--text);text-decoration:none;border-radius:6px;transition:.2s}
+.day-nav a:hover{background:var(--gold-light);color:var(--forest);font-weight:600}
+.container{max-width:900px;margin:0 auto;padding:0 14px}
+.section{margin:24px 0}
+.section-title{font-size:1.15em;font-weight:700;color:var(--forest);border-bottom:3px solid var(--gold);padding-bottom:6px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:0 2px 12px rgba(0,0,0,.07);padding:16px;margin-bottom:12px}
+#map{height:420px;border-radius:var(--radius);margin-bottom:10px;z-index:1}
+.map-legend{font-size:.82em;padding:4px 0;color:var(--text-light)}
+.day-entry{margin-bottom:18px;scroll-margin-top:55px}
+.day-header{background:linear-gradient(135deg,var(--forest),#3a6b1e);color:#fff;padding:10px 16px;border-radius:var(--radius) var(--radius) 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;cursor:pointer}
+.day-header.gold{background:linear-gradient(135deg,#8B4513,var(--gold))}
+.day-header.blue{background:linear-gradient(135deg,#1a5276,#3B7DD8)}
+.day-header .dn{font-size:1.05em;font-weight:700}
+.day-header .dd{opacity:.85;font-size:.82em}
+.day-header .dtag{background:var(--gold);color:#fff;padding:2px 10px;border-radius:12px;font-size:.72em;font-weight:600}
+.day-body{background:var(--white);padding:12px 16px;border-radius:0 0 var(--radius) var(--radius);box-shadow:0 2px 12px rgba(0,0,0,.07);display:none}
+.day-body.open{display:block}
+.day-body .ti{display:flex;gap:10px;padding:4px 0;border-bottom:1px dashed #f0f0f0}
+.day-body .ti:last-child{border-bottom:none}
+.ti .t{color:var(--sky);font-weight:600;white-space:nowrap;min-width:72px;font-size:.85em}
+.ti .d{flex:1;font-size:.88em}
+.abox{background:linear-gradient(135deg,#FFFDF5,var(--gold-light));border:1px solid #F5E6C8;border-radius:10px;padding:10px 14px;margin:6px 0}
+.abox .al{font-weight:700;color:var(--gold);font-size:.78em;letter-spacing:1px}
+.abox .ad{font-size:.84em;color:var(--text-light)}
+.callout{padding:10px 14px;border-radius:8px;margin:6px 0;font-size:.85em}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFA000}
+.callout-info{background:var(--sky-light);border-left:4px solid var(--sky)}
+.callout-tip{background:#E8F5E9;border-left:4px solid var(--forest)}
+table{width:100%;border-collapse:collapse;font-size:.86em}
+th,td{padding:7px 5px;text-align:left;border-bottom:1px solid #eee}
+th{background:var(--forest);color:#fff;font-weight:600;font-size:.82em}
+tr:hover{background:#f9f9f9}
+.hl{display:flex;gap:10px;padding:8px 12px;margin-bottom:6px;background:linear-gradient(135deg,#FFFDF5,var(--gold-light));border-radius:8px;border-left:3px solid var(--gold)}
+.hl .ic{font-size:1.2em}
+.hl .tx{flex:1;font-size:.9em}
+.hl .tx strong{color:var(--forest)}
+.alt-box{border:2px dashed var(--gold);border-radius:var(--radius);padding:14px;margin:14px 0;background:#FFFDF5}
+.cl{list-style:none;padding:3px 0;display:flex;align-items:center;gap:8px;font-size:.88em}
+.cl::before{content:'☐';font-size:1.05em;color:var(--gold)}
+.footer{text-align:center;padding:20px;color:var(--text-light);font-size:.8em;border-top:1px solid #eee;margin-top:24px}
+@media(max-width:640px){
+.hero h1{font-size:1.4em}
+#map{height:280px}
+.day-header{flex-direction:column;align-items:flex-start}
+.ti{flex-direction:column;gap:2px}
+.ti .t{min-width:auto}
+}
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <h1>🏔️ 北疆 13 日深度旅行攻略</h1>
-  <p class="subtitle">2026 年 9 月 25 日（周五）→ 10 月 7 日（周三）</p>
-  <div class="meta"><span>🎯 体验为主 · 节奏宽松</span><span>💰 人均约 ¥12,000→16,000</span><span>📅 请假仅 3 天</span></div>
+  <h1>🏔️ 北疆 13 日深度旅行攻略 · 方案 B</h1>
+  <p class="sub">2026.9.25（五）→ 10.7（三）· 体验为主 · 节奏宽松 · 不赶路</p>
+  <div class="meta">
+    <span>✈️ D2 飞阿勒泰省 10h 车程</span>
+    <span>💰 约 ¥15,000→21,000/人</span>
+    <span>📅 请假仅 3 天</span>
+  </div>
 </div>
 
 <nav class="day-nav">
-  <a href="#overview">📋总览</a> <a href="#mapSection">🗺️地图</a>
-  <a href="#day1">D1</a><a href="#day2">D2</a><a href="#day3">D3</a><a href="#day4">D4</a><a href="#day5">D5</a>
-  <a href="#day6">D6</a><a href="#day7">D7</a><a href="#day8">D8</a><a href="#day9">D9</a><a href="#day10">D10</a>
-  <a href="#day11">D11</a><a href="#day12">D12</a><a href="#day13">D13</a>
-  <a href="#altPlan">🔄备选</a> <a href="#checklist">✅清单</a>
+  <a href="#overview">📋</a><a href="#mapSec">🗺️</a>
+  <a href="#d1">D1</a><a href="#d2">D2</a><a href="#d3">D3</a><a href="#d4">D4</a><a href="#d5">D5</a>
+  <a href="#d6">D6</a><a href="#d7">D7</a><a href="#d8">D8</a><a href="#d9">D9</a><a href="#d10">D10</a>
+  <a href="#d11">D11</a><a href="#d12">D12</a><a href="#d13">D13</a>
+  <a href="#chk">✅</a><a href="#gas">⛽</a>
 </nav>
 
 <div class="container">
 
 <!-- 总览 -->
 <section class="section" id="overview">
-  <h2 class="section-title">📋 行程总览</h2>
+  <h2 class="section-title">📋 方案 B 总览</h2>
   <div class="card">
     <table>
-      <tr><th>日期</th><th>状态</th></tr>
-      <tr><td>9/25（五）</td><td>🛫 中秋假期，出发</td></tr>
-      <tr><td>9/26→27（六→日）</td><td>✅ 中秋假期</td></tr>
-      <tr><td>9/28→30（一→三）</td><td>✏️ <strong>请假 3 天</strong></td></tr>
-      <tr><td>10/1→7（四→三）</td><td>✅ 国庆假期（7 天）</td></tr>
+      <tr><th colspan="2">核心变化：D2 乌鲁木齐✈️阿勒泰（飞行1h替代开车10h）</th></tr>
+      <tr><td>❌ 不去了</td><td>天山天池（¥155）、可可托海（¥120）、富蕴</td></tr>
+      <tr><td>✅ 保留</td><td>五彩滩日落 🌅、布尔津夜市 🍖</td></tr>
+      <tr><td>✅ 多出来的时间</td><td>喀纳斯+禾木各多半天空闲，节奏更从容</td></tr>
     </table>
-    <p style="margin-top:6px;font-weight:600;color:var(--forest);">总假期 13 天 · 仅需请假 3 天</p>
   </div>
 
-  <div class="highlight-item"><div class="icon">🏔️</div><div class="text"><strong>D5</strong> 喀纳斯晨雾+三湾徒步+🛶皮划艇</div></div>
-  <div class="highlight-item"><div class="icon">🐎</div><div class="text"><strong>D7</strong> 禾木骑马穿越金色白桦林</div></div>
-  <div class="highlight-item"><div class="icon">💧</div><div class="text"><strong>D10</strong> 赛湖骑行+🚁直升机/🎈热气球</div></div>
-  <div class="highlight-item"><div class="icon">🛣️</div><div class="text"><strong>D12</strong> 独库公路北段（一天看四季）</div></div>
+  <h2 class="section-title">🔥 五大高光</h2>
+  <div class="hl"><div class="ic">🏔️</div><div class="tx"><strong>D4 喀纳斯</strong> 神仙湾晨雾+三湾徒步+🛶皮划艇</div></div>
+  <div class="hl"><div class="ic">🐎</div><div class="tx"><strong>D6 禾木</strong> 骑马穿越金色白桦林（全程最推荐活动）</div></div>
+  <div class="hl"><div class="ic">💧</div><div class="tx"><strong>D10 赛湖</strong> 骑行+🚁直升机¥880/🎈热气球¥280</div></div>
+  <div class="hl"><div class="ic">🛣️</div><div class="tx"><strong>D12 独库公路</strong> 一天看四季</div></div>
+
+  <h2 class="section-title">📅 13 天速览</h2>
+  <div class="card" style="overflow-x:auto">
+    <table>
+      <tr><th>天</th><th>日期</th><th>核心行程</th><th>住</th><th>交通</th></tr>
+      <tr><td>D1</td><td>9/25</td><td>北京✈️乌鲁木齐·大巴扎·领馆巷</td><td>乌鲁木齐</td><td>🛫4h</td></tr>
+      <tr style="background:#E8F5E9"><td>D2</td><td>9/26</td><td><strong>✈️乌鲁木齐→阿勒泰（1h）</strong>·五彩滩·布尔津</td><td>布尔津</td><td>✈️1h+🚗1.5h</td></tr>
+      <tr style="background:#FFFDF5"><td>D3</td><td>9/27</td><td>⭐布尔津→喀纳斯·观鱼台</td><td>🏕️喀纳斯</td><td>🚗3h</td></tr>
+      <tr style="background:#FFFDF5"><td>D4</td><td>9/28</td><td>🔥喀纳斯晨雾+三湾徒步+皮划艇</td><td>🏕️喀纳斯</td><td>🚶徒步</td></tr>
+      <tr style="background:#FFFDF5"><td>D5</td><td>9/29</td><td>喀纳斯→禾木·哈登日落</td><td>🏕️禾木</td><td>🚗1.5h</td></tr>
+      <tr style="background:#FFFDF5"><td>D6</td><td>9/30</td><td>🔥禾木骑马穿越美丽峰</td><td>🏕️禾木</td><td>🐎骑马</td></tr>
+      <tr style="background:#FFFDF5"><td>D7</td><td>10/1</td><td>禾木放空+👋朋友离队</td><td>🏕️禾木</td><td>休整日</td></tr>
+      <tr><td>D8</td><td>10/2</td><td>禾木→乌尔禾魔鬼城（8h）</td><td>乌尔禾</td><td>🚗8h</td></tr>
+      <tr style="background:#FFFDF5"><td>D9</td><td>10/3</td><td>⭐赛里木湖·星空</td><td>🏕️赛湖</td><td>🚗6h</td></tr>
+      <tr style="background:#FFFDF5"><td>D10</td><td>10/4</td><td>🔥赛湖骑行+🚁直升机/🎈热气球</td><td>🏕️赛湖</td><td>🚴🚁</td></tr>
+      <tr><td>D11</td><td>10/5</td><td>赛湖→伊宁蓝色小镇→那拉提</td><td>那拉提</td><td>🚗5h</td></tr>
+      <tr><td>D12</td><td>10/6</td><td>独库公路北段→乌鲁木齐</td><td>乌鲁木齐</td><td>🚗8h</td></tr>
+      <tr><td>D13</td><td>10/7</td><td>博物馆·烤全羊✈️北京</td><td>到家</td><td>🛫4h</td></tr>
+    </table>
+  </div>
 </section>
 
 <!-- 地图 -->
-<section class="section" id="mapSection">
-  <h2 class="section-title">🗺️ 路线地图</h2>
+<section class="section" id="mapSec">
+  <h2 class="section-title">🗺️ 交互路线地图</h2>
   <div id="map"></div>
-  <div class="map-legend">📍 点击地图标记可跳转到对应行程 · 🟢住宿点 ⭐高光日 🛣️路线</div>
-</section>
-
-<!-- 13天速览 -->
-<section class="section">
-  <h2 class="section-title">📅 13 天速览</h2>
-  <div class="card" style="overflow-x:auto;">
-    <table>
-      <tr><th>天</th><th>日期</th><th>核心行程</th><th>住</th><th>车程</th></tr>
-      <tr><td>D1</td><td>9/25</td><td>北京✈️乌鲁木齐，大巴扎+领馆巷</td><td>乌鲁木齐</td><td>🛫4h</td></tr>
-      <tr><td>D2</td><td>9/26</td><td>天山天池→富蕴</td><td>富蕴</td><td>🚗5.5h</td></tr>
-      <tr><td>D3</td><td>9/27</td><td>可可托海→五彩滩→布尔津</td><td>布尔津</td><td>🚗5h</td></tr>
-      <tr style="background:#FFFDF5;"><td>D4</td><td>9/28</td><td>⭐喀纳斯：观鱼台俯瞰湖景</td><td>🏕️喀纳斯</td><td>🚗3h</td></tr>
-      <tr style="background:#FFFDF5;"><td>D5</td><td>9/29</td><td>🔥神仙湾晨雾+三湾徒步+皮划艇</td><td>🏕️喀纳斯</td><td>🚶徒步</td></tr>
-      <tr style="background:#FFFDF5;"><td>D6</td><td>9/30</td><td>喀纳斯→禾木，哈登观景台日落</td><td>🏕️禾木</td><td>🚗2h</td></tr>
-      <tr style="background:#FFFDF5;"><td>D7</td><td>10/1</td><td>🔥禾木骑马+朋友离队</td><td>🏕️禾木</td><td>休整日</td></tr>
-      <tr><td>D8</td><td>10/2</td><td>禾木→乌尔禾魔鬼城日落</td><td>乌尔禾</td><td>🚗8h🔥</td></tr>
-      <tr style="background:#FFFDF5;"><td>D9</td><td>10/3</td><td>⭐赛里木湖：看星空</td><td>🏕️赛湖</td><td>🚗6h</td></tr>
-      <tr style="background:#FFFDF5;"><td>D10</td><td>10/4</td><td>🔥赛湖骑行+🚁直升机/🎈热气球</td><td>🏕️赛湖</td><td>🚴骑行</td></tr>
-      <tr><td>D11</td><td>10/5</td><td>赛湖→伊宁蓝色小镇→那拉提</td><td>那拉提</td><td>🚗5h</td></tr>
-      <tr><td>D12</td><td>10/6</td><td>独库公路北段</td><td>乌鲁木齐</td><td>🚗8h</td></tr>
-      <tr><td>D13</td><td>10/7</td><td>乌鲁木齐✈️北京</td><td>到家</td><td>🛫4h</td></tr>
-    </table>
-  </div>
+  <div class="map-legend">📍 <strong>点击圆点</strong>查看每日详情 · 绿色=住宿点 · 🟡金色=高光日 · 蓝色虚线=行驶路线</div>
 </section>
 
 <!-- 每日行程 -->
 <section class="section" id="days">
 
-<div class="day-entry" id="day1">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 1 · 9/25（五）</span> <span class="day-date">北京→乌鲁木齐</span></div>
-    <span class="day-tag">🛫 出发日</span>
-  </div>
-  <div class="day-body open">
-    <div class="time-item"><span class="time">08:00→12:00</span><span class="desc">北京 ✈️ 乌鲁木齐（约 4h）</span></div>
-    <div class="time-item"><span class="time">11:30</span><span class="desc">机场取车 🚗 验车拍照</span></div>
-    <div class="time-item"><span class="time">16:00→18:00</span><span class="desc">新疆国际大巴扎</span></div>
-    <div class="time-item"><span class="time">18:00→20:00</span><span class="desc">🍖 <strong>领馆巷美食街</strong>：烤包子¥3、馕坑肉、酸奶粽子</span></div>
-    <div class="callout callout-tip">💡 新疆比北京晚 2h：14 点午饭、20 点晚饭。大巴扎砍价从对半开始。</div>
-  </div>
-</div>
+<div class="day-entry" id="d1">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">Day 1 · 9/25（五）</span> <span class="dd">北京→乌鲁木齐</span></div><span class="dtag">🛫 出发日</span></div>
+<div class="day-body open">
+<div class="ti"><span class="t">08:00→12:00</span><span class="d">北京 ✈️ 乌鲁木齐（约4h，选早班机）</span></div>
+<div class="ti"><span class="t">11:30</span><span class="d">机场取车 🚗 验车拍照（注意：D2要飞阿勒泰，建议D1不租车）</span></div>
+<div class="ti"><span class="t">16:00→18:00</span><span class="d">🛍️ <strong>新疆国际大巴扎</strong></span></div>
+<div class="ti"><span class="t">18:00→20:00</span><span class="d">🍖 <strong>领馆巷美食街</strong>：烤包子¥3、馕坑肉、酸奶粽子¥10</span></div>
+<div class="callout callout-info"><strong>🚗 租车提醒</strong>：方案B建议D1不租车（乌鲁木齐打车即可），D2到阿勒泰再租。阿勒泰神州/一嗨均有门店。</div>
+</div></div>
 
-<div class="day-entry" id="day2">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 2 · 9/26（六）</span> <span class="day-date">乌市→天池→富蕴</span></div>
-    <span class="day-tag">🚗 5.5h</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">08:30→10:00</span><span class="desc">🚗 乌鲁木齐→天山天池（1.5h）⛽乌市加满</span></div>
-    <div class="time-item"><span class="time">10:00→13:00</span><span class="desc">🏞️ 游览天池（¥155 含区间车）</span></div>
-    <div class="time-item"><span class="time">14:00→18:00</span><span class="desc">🚗 天池→富蕴（4h）</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d2">
+<div class="day-header gold" onclick="tog(this)"><div><span class="dn">Day 2 · 9/26（六）</span> <span class="dd">✈️ 乌鲁木齐→阿勒泰→布尔津</span></div><span class="dtag">✈️ 飞行日</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">08:00→09:00</span><span class="d">退房，去乌鲁木齐地窝堡机场</span></div>
+<div class="ti"><span class="t"><strong>09:00→10:00</strong></span><span class="d"><strong>✈️ 乌鲁木齐→阿勒泰</strong>（飞行约1h，¥300→500）</span></div>
+<div class="ti"><span class="t">10:00→10:30</span><span class="d">阿勒泰机场取车 🚗（提前租好SUV）</span></div>
+<div class="ti"><span class="t">10:30→12:00</span><span class="d">🚗 阿勒泰→布尔津（1.5h）⛽阿勒泰加满</span></div>
+<div class="ti"><span class="t">12:00→14:00</span><span class="d">布尔津午餐+入住休整</span></div>
+<div class="ti"><span class="t">14:00→17:00</span><span class="d">布尔津闲逛/休息</span></div>
+<div class="ti"><span class="t"><strong>17:30→19:30</strong></span><span class="d">🌅 <strong>五彩滩看日落</strong>（¥45，雅丹+额尔齐斯河）</span></div>
+<div class="ti"><span class="t"><strong>20:00→</strong></span><span class="d">🍖 <strong>布尔津河堤夜市</strong>：冷水鱼烧烤🐟+卡瓦斯🍺</span></div>
+<div class="callout callout-tip">💡 <strong>为何飞阿勒泰？</strong> 省了开车10.5h，多了1天半给喀纳斯和禾木。¥400的机票省一天时间，值！</div>
+</div></div>
 
-<div class="day-entry" id="day3">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 3 · 9/27（日）</span> <span class="day-date">富蕴→可可托海→布尔津</span></div>
-    <span class="day-tag">🚗 5h</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">08:30→12:00</span><span class="desc">游览可可托海（¥120 含区间车）</span></div>
-    <div class="time-item"><span class="time">13:00→17:00</span><span class="desc">🚗 可可托海→布尔津（4h）</span></div>
-    <div class="time-item"><span class="time">18:00→19:30</span><span class="desc">🌅 五彩滩看日落（¥45）</span></div>
-    <div class="time-item"><span class="time">20:00→</span><span class="desc">🍖 布尔津河堤夜市：冷水鱼烧烤+卡瓦斯</span></div>
-    <div class="callout callout-warn">⚠️ <strong>今晚必做</strong>：加满油！买水、零食、水果（进喀纳斯前最后一站）</div>
-  </div>
-</div>
+<div class="day-entry" id="d3">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">⭐ Day 3 · 9/27（日）</span> <span class="dd">布尔津→喀纳斯</span></div><span class="dtag">🏕️ 住景区内</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">08:00→11:00</span><span class="d">🚗 布尔津→喀纳斯贾登峪（3h）</span></div>
+<div class="ti"><span class="t">⛽</span><span class="d"><strong>布尔津加满油</strong>（进喀纳斯前最后一站！）</span></div>
+<div class="ti"><span class="t">11:00→12:00</span><span class="d">换乘区间车进景区，车停贾登峪</span></div>
+<div class="ti"><span class="t">12:00→13:00</span><span class="d">入住喀纳斯景区内木屋 🏕️</span></div>
+<div class="ti"><span class="t">14:00→17:00</span><span class="d">喀纳斯湖边栈道散步</span></div>
+<div class="ti"><span class="t">17:00→19:00</span><span class="d">登<strong>观鱼台</strong>（1068级台阶，俯瞰湖景+日落）</span></div>
+<div class="ti"><span class="t">🌟 晚上</span><span class="d">看星空（喀纳斯光污染极少）</span></div>
+<div class="callout callout-warn">⚠️ 进景区路过三湾时不要下车！返程清晨再玩。门票¥230（含区间车，可玩2天）。</div>
+</div></div>
 
-<div class="day-entry" id="day4">
-  <div class="day-header highlight" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">⭐ Day 4 · 9/28（一）</span> <span class="day-date">布尔津→喀纳斯</span></div>
-    <span class="day-tag">🏕️ 住景区内</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">08:00→11:00</span><span class="desc">🚗 布尔津→喀纳斯贾登峪（3h），车停停车场</span></div>
-    <div class="time-item"><span class="time">11:00→12:00</span><span class="desc">换乘区间车进景区</span></div>
-    <div class="time-item"><span class="time">12:00→13:00</span><span class="desc">入住喀纳斯景区内木屋 🏕️</span></div>
-    <div class="time-item"><span class="time">14:00→17:00</span><span class="desc">喀纳斯湖边栈道散步</span></div>
-    <div class="time-item"><span class="time">17:00→19:00</span><span class="desc">登观鱼台（1068 级台阶）</span></div>
-    <div class="time-item"><span class="time">🌟 晚上</span><span class="desc">看星空</span></div>
-    <div class="callout callout-warn">⚠️ 进景区路过三湾时不要下车！清晨才是王炸。门票¥230。</div>
-  </div>
-</div>
+<div class="day-entry" id="d4">
+<div class="day-header gold" onclick="tog(this)"><div><span class="dn">🔥 Day 4 · 9/28（一）</span> <span class="dd">喀纳斯深度游</span></div><span class="dtag">🥇 全场最高光</span></div>
+<div class="day-body">
+<div class="ti"><span class="t"><strong>🌫️ 07:00→08:30</strong></span><span class="d"><strong>神仙湾晨雾</strong>——此行最经典画面！🔥🔥</span></div>
+<div class="ti"><span class="t"><strong>🥾 08:30→10:30</strong></span><span class="d"><strong>三湾徒步</strong>（月亮湾→卧龙湾，1.5km木栈道）</span></div>
+<div class="ti"><span class="t">10:30→11:30</span><span class="d">湖边咖啡馆歇脚</span></div>
+<div class="ti"><span class="t">12:00→13:00</span><span class="d">午餐</span></div>
+<div class="abox"><div class="al">🛶 下午选项A：皮划艇（推荐！）</div><div class="ad">约¥200→400/人含装备教练，到景区问民宿老板是否开放，从湖心看金色森林</div></div>
+<div class="abox"><div class="al">🏘️ 下午选项B：白哈巴村</div><div class="ad">边境原始村落，门票¥30，需边防证（景区警务室免费办）</div></div>
+<div class="ti"><span class="t">18:00→19:00</span><span class="d">再看一次夕阳下的喀纳斯湖</span></div>
+</div></div>
 
-<div class="day-entry" id="day5">
-  <div class="day-header" style="background:linear-gradient(135deg,#8B4513,#D4A02B);" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">🔥 Day 5 · 9/29（二）</span> <span class="day-date">喀纳斯深度游</span></div>
-    <span class="day-tag">🥇 全场最高光</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">🌫️ 07:00→08:30</span><span class="desc"><strong>神仙湾晨雾</strong>——此行最经典画面！</span></div>
-    <div class="time-item"><span class="time">🥾 08:30→10:30</span><span class="desc">三湾徒步（月亮湾→卧龙湾，1.5km）</span></div>
-    <div class="activity-box">
-      <div class="alabel">🛶 下午选项 A：皮划艇（推荐！）</div>
-      <div class="adetail">约¥200→400/人，到景区问民宿老板是否开放</div>
-    </div>
-    <div class="activity-box">
-      <div class="alabel">🏘️ 下午选项 B：白哈巴村</div>
-      <div class="adetail">边境原始村落，门票¥30，需边防证</div>
-    </div>
-    <div class="time-item"><span class="time">18:00→19:00</span><span class="desc">再看一次夕阳下的喀纳斯湖</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d5">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">⭐ Day 5 · 9/29（二）</span> <span class="dd">喀纳斯→禾木</span></div><span class="dtag">🏘️ 住禾木</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">07:00→08:30</span><span class="d">再去神仙湾拍晨雾（可选）</span></div>
+<div class="ti"><span class="t">09:00→11:00</span><span class="d">出景区→取车→开往禾木</span></div>
+<div class="ti"><span class="t"><strong>11:00→12:30</strong></span><span class="d">🚗 喀纳斯→<strong>禾木</strong>（仅60km，1.5h）</span></div>
+<div class="ti"><span class="t">12:30→14:00</span><span class="d">入住禾木小木屋+午餐 🏕️</span></div>
+<div class="ti"><span class="t">14:00→18:00</span><span class="d">禾木村里漫步（白桦林、木屋、禾木河）</span></div>
+<div class="ti"><span class="t"><strong>🌇 18:30→20:00</strong></span><span class="d"><strong>哈登观景台看日落</strong>（全村金色全景）</span></div>
+<div class="ti"><span class="t">🌟 晚上</span><span class="d">拍星空</span></div>
+</div></div>
 
-<div class="day-entry" id="day6">
-  <div class="day-header highlight" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">⭐ Day 6 · 9/30（三）</span> <span class="day-date">喀纳斯→禾木</span></div>
-    <span class="day-tag">🏘️ 住禾木</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">07:00→08:30</span><span class="desc">再去神仙湾拍晨雾（可选）</span></div>
-    <div class="time-item"><span class="time">09:00→11:00</span><span class="desc">出景区→取车→开往禾木</span></div>
-    <div class="time-item"><span class="time">11:00→13:00</span><span class="desc">🚗 喀纳斯→禾木（仅 60km，1.5h）</span></div>
-    <div class="time-item"><span class="time">13:00→14:00</span><span class="desc">入住禾木小木屋 🏕️</span></div>
-    <div class="time-item"><span class="time">15:00→18:00</span><span class="desc">禾木村里漫步</span></div>
-    <div class="time-item"><span class="time">🌇 18:30→20:00</span><span class="desc">哈登观景台看日落</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d6">
+<div class="day-header gold" onclick="tog(this)"><div><span class="dn">🔥 Day 6 · 9/30（三）</span> <span class="dd">禾木骑马穿越</span></div><span class="dtag">🐎 骑马日</span></div>
+<div class="day-body">
+<div class="ti"><span class="t"><strong>🌅 06:30→08:00</strong></span><span class="d"><strong>禾木晨曦</strong>（晨雾+炊烟+金色桦林）</span></div>
+<div class="abox"><div class="al">🐎 09:00→12:00 禾木骑马穿越美丽峰</div><div class="ad">
+<strong>路线</strong>：禾木桥→穿越白桦林→美丽峰下山村<br>
+<strong>价格</strong>：约¥300→450/人（往返含向导）<br>
+<strong>预订</strong>：让民宿老板帮忙联系 ⭐<br>
+<strong>💡 带现金！</strong>峰下没信号
+</div></div>
+<div class="ti"><span class="t">12:00→13:30</span><span class="d">午餐</span></div>
+<div class="ti"><span class="t">☕ 下午</span><span class="d">村里咖啡厅发呆/白桦林拍照/禾木河畔散步</span></div>
+<div class="ti"><span class="t">🌇 18:00</span><span class="d">再看一次日落</span></div>
+<div class="ti"><span class="t">🍖 晚上</span><span class="d">烤羊肉串+卡瓦斯，星空晚餐</span></div>
+</div></div>
 
-<div class="day-entry" id="day7">
-  <div class="day-header" style="background:linear-gradient(135deg,#8B4513,#D4A02B);" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">🔥 Day 7 · 10/1（四）</span> <span class="day-date">禾木骑马+朋友离队</span></div>
-    <span class="day-tag">🐎 骑马日</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">🌅 06:30→08:00</span><span class="desc">禾木晨曦（一起看！）</span></div>
-    <div class="time-item"><span class="time">08:00→08:30</span><span class="desc">送朋友，喝奶茶告别 👋</span></div>
-    <div class="activity-box">
-      <div class="alabel">🐎 09:00→12:00 禾木骑马穿越美丽峰</div>
-      <div class="adetail">¥300→450/人（往返含向导） · 让民宿老板安排 · 带现金</div>
-    </div>
-    <div class="time-item"><span class="time">13:00→</span><span class="desc">放空：咖啡厅/白桦林/禾木河畔</span></div>
-    <div class="time-item"><span class="time">🍖 晚上</span><span class="desc">烤羊肉串+卡瓦斯，星空晚餐</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d7">
+<div class="day-header gold" onclick="tog(this)"><div><span class="dn">Day 7 · 10/1（四）</span> <span class="dd">禾木放空 + 👋 朋友离队</span></div><span class="dtag">👋 朋友离队</span></div>
+<div class="day-body">
+<div class="callout callout-info"><strong>👋 两个朋友今早离队</strong>：体验了喀纳斯晨雾+禾木骑马+禾木晨曦，完美收尾！</div>
+<div class="ti"><span class="t">🌅 06:30→08:00</span><span class="d">最后一次禾木晨曦（一起看）</span></div>
+<div class="ti"><span class="t">08:00→08:30</span><span class="d">喝奶茶告别朋友 👋</span></div>
+<div class="abox"><div class="al">🚕 朋友离队路线</div><div class="ad">
+禾木→🚕打车4h（¥400→600）→✈️阿勒泰机场<br>
+→ 阿勒泰✈️乌鲁木齐（¥370起）→✈️北京（¥1,000→1,500）<br>
+<strong>人均约¥1,650→2,150</strong>
+</div></div>
+<div class="ti"><span class="t">☕ 你们继续</span><span class="d">一整天在禾木彻底放空 🧘</span></div>
+</div></div>
 
-<div class="day-entry" id="day8">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 8 · 10/2（五）</span> <span class="day-date">禾木→乌尔禾</span></div>
-    <span class="day-tag">🚗 最长 8h 🔥</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">07:00</span><span class="desc">退房！禾木门口加满油 ⛽</span></div>
-    <div class="time-item"><span class="time">07:30→11:30</span><span class="desc">🚗 禾木→布尔津（4h）</span></div>
-    <div class="time-item"><span class="time">11:30→12:30</span><span class="desc">布尔津午餐</span></div>
-    <div class="time-item"><span class="time">12:30→16:30</span><span class="desc">🚗 布尔津→乌尔禾（4h）</span></div>
-    <div class="time-item"><span class="time">17:00→18:30</span><span class="desc">乌尔禾魔鬼城看日落（¥62）</span></div>
-    <div class="callout callout-warn">⚠️ 只剩 2 人轮换开，每 2h 换一次人</div>
-  </div>
-</div>
+<div class="day-entry" id="d8">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">Day 8 · 10/2（五）</span> <span class="dd">禾木→乌尔禾·魔鬼城</span></div><span class="dtag">🚗 最长8h🔥</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">07:00</span><span class="d">退房！禾木门口加满油 ⛽</span></div>
+<div class="ti"><span class="t">07:30→11:30</span><span class="d">🚗 禾木→布尔津（4h）</span></div>
+<div class="ti"><span class="t">11:30→12:30</span><span class="d">布尔津午餐</span></div>
+<div class="ti"><span class="t">12:30→16:30</span><span class="d">🚗 布尔津→乌尔禾（4h）</span></div>
+<div class="ti"><span class="t">17:00→18:30</span><span class="d">🌅 乌尔禾魔鬼城看日落（¥62含小火车）</span></div>
+<div class="callout callout-warn">⚠️ 只剩2人轮换开，每2h换一次人</div>
+</div></div>
 
-<div class="day-entry" id="day9">
-  <div class="day-header highlight" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">⭐ Day 9 · 10/3（六）</span> <span class="day-date">乌尔禾→赛里木湖</span></div>
-    <span class="day-tag">💧 住赛湖</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">08:00</span><span class="desc">克拉玛依加满油 ⛽</span></div>
-    <div class="time-item"><span class="time">09:00→15:00</span><span class="desc">🚗 乌尔禾→赛里木湖（6h，连霍高速）</span></div>
-    <div class="time-item"><span class="time">16:00→</span><span class="desc">入住赛里木湖（推荐房车营地）</span></div>
-    <div class="time-item"><span class="time">17:00→20:00</span><span class="desc">环湖西段散步（光线最美）</span></div>
-    <div class="time-item"><span class="time">🌟 晚上</span><span class="desc">赛湖星空</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d9">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">⭐ Day 9 · 10/3（六）</span> <span class="dd">乌尔禾→赛里木湖</span></div><span class="dtag">💧 住赛湖</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">08:00</span><span class="d">克拉玛依加满油 ⛽</span></div>
+<div class="ti"><span class="t">09:00→15:00</span><span class="d">🚗 乌尔禾→赛里木湖（6h，连霍高速）</span></div>
+<div class="ti"><span class="t">16:00→</span><span class="d">入住赛湖（推荐房车营地¥800→1,500）</span></div>
+<div class="ti"><span class="t">17:00→20:00</span><span class="d">环湖西段散步（光线最美）</span></div>
+<div class="ti"><span class="t">🌟 晚上</span><span class="d">赛湖星空</span></div>
+</div></div>
 
-<div class="day-entry" id="day10">
-  <div class="day-header" style="background:linear-gradient(135deg,#1a5276,#3B7DD8);" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">🔥 Day 10 · 10/4（日）</span> <span class="day-date">赛湖深度游</span></div>
-    <span class="day-tag">🚴🚁🎈</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">🌅 07:00→08:30</span><span class="desc">赛湖日出</span></div>
-    <div class="time-item"><span class="time">🚴 09:00→13:00</span><span class="desc">骑行环湖（东门租电动车¥80/h，到南门折返）</span></div>
-    <div class="time-item"><span class="time">🍵 12:00→13:00</span><span class="desc">湖边野餐煮茶</span></div>
-    <div class="activity-box">
-      <div class="alabel">🚁 下午高空体验</div>
-      <div class="adetail">• 直升机 ¥880/人（推荐！俯瞰赛湖+雪山）<br>• 热气球 ¥280/人（傍晚夕阳）<br>东门游客中心现场问</div>
-    </div>
-    <div class="time-item"><span class="time">16:00→17:00</span><span class="desc">果子沟大桥观景台</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d10">
+<div class="day-header blue" onclick="tog(this)"><div><span class="dn">🔥 Day 10 · 10/4（日）</span> <span class="dd">赛湖深度·骑行+直升机</span></div><span class="dtag">🚴🚁🎈</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">🌅 07:00→08:30</span><span class="d">赛湖日出</span></div>
+<div class="ti"><span class="t"><strong>🚴 09:00→13:00</strong></span><span class="d"><strong>骑行环湖</strong>（东门租电动车¥80/h，到南门折返）<br>停靠：松树头→克勒涌珠（天鹅）→西海草原→S弯</span></div>
+<div class="ti"><span class="t">🍵 12:00→13:00</span><span class="d"><strong>湖边野餐煮茶</strong>（带馕·水果·炉头茶具）</span></div>
+<div class="abox"><div class="al">🚁 下午高空体验（东门游客中心现场问）</div><div class="ad">
+<strong>🚁 直升机观湖 ¥880/人</strong> ⭐ 10→15min 俯瞰赛湖+雪山<br>
+🎈 热气球 ¥280/人 15→20min 傍晚夕阳染金湖面
+</div></div>
+<div class="ti"><span class="t">🌉 16:00→17:00</span><span class="d">果子沟大桥观景台</span></div>
+<div class="ti"><span class="t">🌙 晚上</span><span class="d">最后一晚赛湖宁静</span></div>
+</div></div>
 
-<div class="day-entry" id="day11">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 11 · 10/5（一）</span> <span class="day-date">赛湖→伊宁→那拉提</span></div>
-    <span class="day-tag">🚗 5h</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">09:00</span><span class="desc">赛湖门口加满油 ⛽</span></div>
-    <div class="time-item"><span class="time">09:00→11:00</span><span class="desc">🚗 赛湖→伊宁（2h）</span></div>
-    <div class="time-item"><span class="time">11:00→13:00</span><span class="desc">🔵 伊宁喀赞其民俗街（蓝色小镇）</span></div>
-    <div class="time-item"><span class="time">14:00→18:00</span><span class="desc">🚗 伊宁→那拉提（3→4h）</span></div>
-  </div>
-</div>
+<div class="day-entry" id="d11">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">Day 11 · 10/5（一）</span> <span class="dd">赛湖→伊宁→那拉提</span></div><span class="dtag">🚗 5h</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">09:00</span><span class="d">赛湖门口加满油 ⛽</span></div>
+<div class="ti"><span class="t">09:00→11:00</span><span class="d">🚗 赛湖→伊宁（2h）</span></div>
+<div class="ti"><span class="t">11:00→13:00</span><span class="d">🔵 <strong>伊宁喀赞其民俗街</strong>（蓝色小镇，拍照出片）</span></div>
+<div class="ti"><span class="t">14:00→18:00</span><span class="d">🚗 伊宁→那拉提（3→4h）</span></div>
+<div class="ti"><span class="t">⚠️ 今晚</span><span class="d">决定明天走不走独库公路</span></div>
+</div></div>
 
-<div class="day-entry" id="day12">
-  <div class="day-header highlight" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 12 · 10/6（二）</span> <span class="day-date">独库公路北段</span></div>
-    <span class="day-tag">🛣️ 8h</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">07:00</span><span class="desc">那拉提加满油 ⛽（<strong>独库中间无加油站！</strong>）</span></div>
-    <div class="time-item"><span class="time">08:00→18:00</span><span class="desc">🚗 独库公路：那拉提→独山子→乌鲁木齐</span></div>
-    <div class="time-item"><span class="time">沿途</span><span class="desc">乔尔玛→哈希勒根达坂(3,400m)→天瀑</span></div>
-    <div class="callout callout-warn">⚠️ 可能因雪封闭！出发前 12122 或「新疆路网」</div>
-  </div>
-</div>
+<div class="day-entry" id="d12">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">Day 12 · 10/6（二）</span> <span class="dd">独库公路北段</span></div><span class="dtag">🛣️ 8h</span></div>
+<div class="day-body">
+<div class="ti"><span class="t"><strong>07:00</strong></span><span class="d"><strong>那拉提加满油</strong> ⛽（独库中间无加油站！）</span></div>
+<div class="ti"><span class="t">08:00→18:00</span><span class="d">🚗 独库公路北段：那拉提→独山子→乌鲁木齐<br>沿途：乔尔玛→哈希勒根达坂(3,400m)→天瀑</span></div>
+<div class="ti"><span class="t">18:00→</span><span class="d">抵达乌鲁木齐</span></div>
+<div class="callout callout-warn">⚠️ 独库可能因大雪封闭！出发前打12122或查「新疆路网」公众号。封闭时绕行连霍高速。</div>
+</div></div>
 
-<div class="day-entry" id="day13">
-  <div class="day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-    <div><span class="day-num">Day 13 · 10/7（三）</span> <span class="day-date">乌鲁木齐→北京</span></div>
-    <span class="day-tag">🏡 回家</span>
-  </div>
-  <div class="day-body">
-    <div class="time-item"><span class="time">10:30→12:30</span><span class="desc">🏛️ 新疆博物馆（楼兰干尸，免费）</span></div>
-    <div class="time-item"><span class="time">13:00→14:00</span><span class="desc">🍽️ 丝路有约</span></div>
-    <div class="time-item"><span class="time">15:00→17:00</span><span class="desc">🛍️ 采购伴手礼</span></div>
-    <div class="time-item"><span class="time">18:00→20:00</span><span class="desc">🍖 楼兰秘烤烤全羊（提前预订）</span></div>
-    <div class="time-item"><span class="time">🛫</span><span class="desc">还车→乌鲁木齐✈️北京</span></div>
-  </div>
-</div>
-
-</section>
-
-<!-- 备选方案 -->
-<section class="section" id="altPlan">
-  <h2 class="section-title">🔄 备选方案：禾木提前</h2>
-  <div class="alt-plan">
-    <p style="font-weight:700;color:var(--forest);margin-bottom:10px;">把禾木移到喀纳斯前面，你看要不要换</p>
-    <table>
-      <tr><th></th><th>正式方案（当前）</th><th>备选（禾木在前）</th></tr>
-      <tr><td>D4 9/28</td><td>🚗 布尔津→<strong>喀纳斯</strong></td><td>🚗 布尔津→<strong>禾木</strong>🏘️</td></tr>
-      <tr><td>D5 9/29</td><td>🔥 喀纳斯晨雾</td><td>🔥 禾木骑马+放空</td></tr>
-      <tr><td>D6 9/30</td><td>🚗 喀纳斯→<strong>禾木</strong></td><td>🚗 禾木→<strong>喀纳斯</strong>🏔️</td></tr>
-      <tr><td>D7 10/1</td><td>🔥 禾木骑马+<strong>朋友离队</strong></td><td>🔥 喀纳斯晨雾+三湾徒步 <strong>❓朋友离队</strong></td></tr>
-      <tr><td>D8 10/2</td><td>🚗 禾木→乌尔禾（8h）</td><td>🚗 喀纳斯→乌尔禾（8h）</td></tr>
-    </table>
-    <div style="margin:12px 0;">
-      <p style="font-weight:700;color:var(--forest);">✅ 优势</p>
-      <ul style="padding-left:18px;font-size:0.9em;">
-        <li>禾木→喀纳斯仅 60km（1.5h），中间不用赶路</li>
-        <li>先放空再徒步，节奏更自然</li>
-      </ul>
-    </div>
-    <div style="margin:12px 0;">
-      <p style="font-weight:700;color:#C62828;">⚠️ 问题</p>
-      <ul style="padding-left:18px;font-size:0.9em;">
-        <li>朋友 10/1 从喀纳斯离队，去阿勒泰机场更远</li>
-        <li>喀纳斯晨雾看完就得走，体验不完整</li>
-      </ul>
-    </div>
-    <div class="callout callout-info" style="margin:0;">
-      <strong>你觉得怎么样？想换的话我帮你微调细节。</strong>
-    </div>
-  </div>
-</section>
-
-<!-- 朋友离队 -->
-<section class="section">
-  <h2 class="section-title">👋 朋友离队方案</h2>
-  <div class="card">
-    <p>D7（10/1）看完禾木晨曦后离队：</p>
-    <div style="margin:8px 0;">
-      🏘️ 禾木 → 🚕 打车 4h ¥400→600 → ✈️ 阿勒泰机场<br>
-      ✈️ 阿勒泰→乌鲁木齐（¥370 起）→ ✈️ 北京（¥1,000→1,500）
-    </div>
-    <table style="max-width:400px;">
-      <tr><th>项目</th><th>人均</th></tr>
-      <tr><td>禾木→阿勒泰打车</td><td>约¥250</td></tr>
-      <tr><td>阿勒泰✈️乌鲁木齐</td><td>约¥400</td></tr>
-      <tr><td>乌鲁木齐✈️北京</td><td>¥1,000→1,500</td></tr>
-      <tr style="font-weight:700;background:var(--gold-light);"><td>合计</td><td>约¥1,650→2,150</td></tr>
-    </table>
-  </div>
+<div class="day-entry" id="d13">
+<div class="day-header" onclick="tog(this)"><div><span class="dn">Day 13 · 10/7（三）</span> <span class="dd">乌鲁木齐→北京</span></div><span class="dtag">🏡 回家</span></div>
+<div class="day-body">
+<div class="ti"><span class="t">😴 09:00→10:00</span><span class="d">睡到自然醒</span></div>
+<div class="ti"><span class="t">10:30→12:30</span><span class="d">🏛️ <strong>新疆博物馆</strong>（楼兰干尸，免费需预约）</span></div>
+<div class="ti"><span class="t">13:00→14:00</span><span class="d">🍽️ 丝路有约（创意新疆菜）</span></div>
+<div class="ti"><span class="t">15:00→17:00</span><span class="d">🛍️ 采购伴手礼（葡萄干¥30/斤·红枣·馕）</span></div>
+<div class="ti"><span class="t"><strong>18:00→20:00</strong></span><span class="d"><strong>🍖 楼兰秘烤烤全羊</strong>（告别宴，提前预订）</span></div>
+<div class="ti"><span class="t">🛫</span><span class="d">还车→乌鲁木齐✈️北京（4h）→到家！</span></div>
+</div></div>
 </section>
 
 <!-- 住宿 -->
@@ -393,49 +298,57 @@
   <h2 class="section-title">🏠 住宿预订</h2>
   <div class="card">
     <table>
-      <tr><th>地点</th><th>推荐</th><th>平台</th><th>⚠️</th></tr>
-      <tr><td>🏕️喀纳斯</td><td>落日星旅·友间木屋 ⭐4.9</td><td>携程</td><td rowspan="2" style="color:#C62828;font-weight:700;">🔥 现在就订！</td></tr>
-      <tr><td>🏕️禾木</td><td>美峰木屋 ⭐4.9 / 归来村舍 ⭐4.7</td><td>携程</td></tr>
-      <tr><td>🏕️赛湖</td><td>湖边房车营地</td><td>携程</td><td>提前1个月</td></tr>
-      <tr><td>🏨乌鲁木齐</td><td>希尔顿欢朋 / 康莱德</td><td>携程</td><td>提前2周</td></tr>
-      <tr><td>🏨布尔津</td><td>布尔津旅游宾馆</td><td>携程</td><td>提前2周</td></tr>
+      <tr><th>日期</th><th>推荐</th><th>平台</th><th>提醒</th></tr>
+      <tr><td>🏕️喀纳斯（9/27→28）</td><td>落日星旅·友间木屋 ⭐4.9</td><td>携程</td><td rowspan="2" style="color:#C62828;font-weight:700">🔥 现在订！</td></tr>
+      <tr><td>🏕️禾木（9/29→10/1）</td><td>美峰木屋 ⭐4.9 / 归来村舍 ⭐4.7</td><td>携程</td></tr>
+      <tr><td>🏕️赛湖（10/3→4）</td><td>湖边房车营地</td><td>携程</td><td>提前1个月</td></tr>
+      <tr><td>🏨布尔津（9/26）</td><td>布尔津旅游宾馆</td><td>携程</td><td>提前2周</td></tr>
+      <tr><td>🏨乌尔禾（10/2）</td><td>乌尔禾镇酒店</td><td>携程</td><td>提前1周</td></tr>
     </table>
   </div>
 </section>
 
-<!-- 行前Checklist -->
-<section class="section" id="checklist">
-  <h2 class="section-title">✅ 行前 Checklist（打勾用）</h2>
+<!-- 朋友离队 -->
+<section class="section">
+  <h2 class="section-title">👋 朋友离队</h2>
   <div class="card">
-    <p style="font-weight:700;color:var(--forest);margin-bottom:6px;">🔥 住宿（现在→7月底）</p>
-    <ul style="padding-left:0;"><li class="checklist-item">订喀纳斯木屋</li><li class="checklist-item">订禾木木屋</li><li class="checklist-item">订赛里木湖住宿</li><li class="checklist-item">订乌鲁木齐酒店（9/25+10/6）</li><li class="checklist-item">订富蕴/布尔津/乌尔禾/那拉提</li></ul>
-    <p style="font-weight:700;color:var(--forest);margin:8px 0 6px;">🚗 交通</p>
-    <ul style="padding-left:0;"><li class="checklist-item">订北京↔乌鲁木齐机票</li><li class="checklist-item">订租车（SUV+全险）</li><li class="checklist-item">订朋友返程机票（10/1 阿勒泰→北京）</li></ul>
-    <p style="font-weight:700;color:var(--forest);margin:8px 0 6px;">📄 证件&保险</p>
-    <ul style="padding-left:0;"><li class="checklist-item">办边防证（微信「移民局12367」小程序）</li><li class="checklist-item">买旅行保险</li></ul>
-    <p style="font-weight:700;color:var(--forest);margin:8px 0 6px;">🧳 行李</p>
-    <ul style="padding-left:0;"><li class="checklist-item">薄羽绒服/冲锋衣/抓绒/保暖内衣</li><li class="checklist-item">防水防滑鞋/帽子手套围巾</li><li class="checklist-item">防晒霜SPF50+/墨镜/润唇膏/面膜</li><li class="checklist-item">保温杯/充电宝×2/三脚架</li><li class="checklist-item">现金¥1,000/自热米饭/泡面</li><li class="checklist-item">野餐垫+炉头茶具（赛湖野餐）</li><li class="checklist-item">下载新疆离线地图</li></ul>
-    <p style="font-weight:700;color:var(--forest);margin:8px 0 6px;">📱 出发前3天</p>
-    <ul style="padding-left:0;"><li class="checklist-item">确认独库公路开放（12122/「新疆路网」）</li><li class="checklist-item">和民宿确认入住时间</li></ul>
-    <p style="font-weight:700;color:var(--forest);margin:8px 0 6px;">🚗 取车时</p>
-    <ul style="padding-left:0;"><li class="checklist-item">拍车身验车视频/确认备胎</li><li class="checklist-item">加满油出发</li></ul>
+    <p><strong>时间</strong>：D7（10/1）看完禾木晨曦后</p>
+    <p><strong>路线</strong>：禾木→🚕打车4h（¥400→600）→阿勒泰机场→✈️乌鲁木齐（¥370起）→✈️北京</p>
+    <p><strong>人均约 ¥1,650→2,150</strong></p>
+    <p style="margin-top:6px;font-size:.88em;color:var(--text-light)">✅ 他们体验了喀纳斯晨雾+禾木骑马+禾木晨曦，完美收尾</p>
+  </div>
+</section>
+
+<!-- Checklist -->
+<section class="section" id="chk">
+  <h2 class="section-title">✅ 行前 Checklist</h2>
+  <div class="card">
+    <p style="font-weight:700;color:var(--forest);margin-bottom:4px">🔥 住宿（现在→7月底）</p>
+    <ul style="padding-left:0"><li class="cl">订喀纳斯木屋（落日星旅·友间木屋）</li><li class="cl">订禾木木屋（美峰木屋/归来村舍）</li><li class="cl">订赛里木湖住宿（房车营地）</li><li class="cl">订乌鲁木齐/布尔津/乌尔禾/那拉提</li></ul>
+    <p style="font-weight:700;color:var(--forest);margin:6px 0 4px">🚗 交通</p>
+    <ul style="padding-left:0"><li class="cl">订北京↔乌鲁木齐机票（9/25去·10/7回）</li><li class="cl">订乌鲁木齐→阿勒泰机票（D2早班）</li><li class="cl">订阿勒泰租车（SUV+全险）</li><li class="cl">订朋友返程机票（10/1阿勒泰→北京）</li></ul>
+    <p style="font-weight:700;color:var(--forest);margin:6px 0 4px">📄 证件</p>
+    <ul style="padding-left:0"><li class="cl">办边防证（微信「移民局12367」免费）</li><li class="cl">买旅行保险</li></ul>
+    <p style="font-weight:700;color:var(--forest);margin:6px 0 4px">🧳 行李</p>
+    <ul style="padding-left:0"><li class="cl">薄羽绒/冲锋衣/抓绒/保暖内衣</li><li class="cl">防晒SPF50+/墨镜/润唇膏/面膜</li><li class="cl">保温杯/充电宝×2/现金¥1,000</li><li class="cl">野餐垫+炉头茶具（赛湖野餐）</li><li class="cl">下载新疆离线地图</li></ul>
+    <p style="font-weight:700;color:var(--forest);margin:6px 0 4px">📱 出发前3天</p>
+    <ul style="padding-left:0"><li class="cl">确认独库公路开放（12122/「新疆路网」）</li><li class="cl">和民宿确认入住时间</li></ul>
   </div>
 </section>
 
 <!-- 加油速查 -->
-<section class="section">
+<section class="section" id="gas">
   <h2 class="section-title">⛽ 全程加油速查</h2>
   <div class="card">
     <table>
-      <tr><th>什么时候</th><th>在哪加</th><th>为什么</th></tr>
-      <tr><td>D2 乌市出发前</td><td>乌鲁木齐加满</td><td>去富蕴中间站少</td></tr>
-      <tr><td>D3 去布尔津前</td><td>富蕴加满</td><td>可可托海无大站</td></tr>
-      <tr><td>D4 进喀纳斯</td><td>⚠️ <strong>布尔津加满</strong></td><td>景区附近油价贵</td></tr>
-      <tr><td>D8 禾木→乌尔禾</td><td>布尔津加满</td><td>8h 长途必须够</td></tr>
-      <tr><td>D9 去赛湖</td><td>克拉玛依加满</td><td>赛湖附近无站</td></tr>
-      <tr><td>D12 独库公路</td><td>⚠️ <strong>那拉提加满</strong></td><td>独库中间无加油站！</td></tr>
+      <tr><th>路段</th><th>加油点</th><th>为什么</th></tr>
+      <tr><td>D2 阿勒泰→布尔津</td><td>阿勒泰加满</td><td>沿途方便</td></tr>
+      <tr><td>D3 布尔津→喀纳斯</td><td style="color:#C62828;font-weight:700">⚠️ 布尔津加满</td><td>进山前最后一站</td></tr>
+      <tr><td>D8 禾木→乌尔禾</td><td>布尔津加满</td><td>8h长途必须够</td></tr>
+      <tr><td>D9 乌尔禾→赛湖</td><td>克拉玛依加满</td><td>赛湖附近无站</td></tr>
+      <tr><td>D12 独库公路</td><td style="color:#C62828;font-weight:700">⚠️ 那拉提加满</td><td>独库中间无加油站！</td></tr>
     </table>
-    <p style="margin-top:6px;font-size:0.85em;color:var(--text-light);">💡 原则：油表到一半就加，别等亮灯</p>
+    <p style="margin-top:4px;font-size:.82em;color:var(--text-light)">💡 原则：油表到一半就加</p>
   </div>
 </section>
 
@@ -443,82 +356,111 @@
 <section class="section">
   <h2 class="section-title">🚗 行车安全手册</h2>
   <div class="card">
-    <ol style="padding-left:18px;font-size:0.9em;">
+    <ol style="padding-left:16px;font-size:.87em">
       <li><strong>区间测速极多</strong>，不要超速</li>
-      <li><strong>牛羊过马路</strong>是常态，看到前车减速就跟着减</li>
+      <li><strong>牛羊过马路</strong>是常态，看到前车减速跟着减</li>
       <li><strong>加油站都要刷身份证</strong>，随身携带</li>
-      <li><strong>每 2h 换人驾驶</strong>，疲劳驾驶是最大风险</li>
-      <li><strong>10 月初可能下雪</strong>，注意暗冰</li>
-      <li>紧急电话：<strong>12122</strong>（路况）/ 110 / 120</li>
+      <li><strong>每2h换人驾驶</strong>，疲劳驾驶是最大风险</li>
+      <li><strong>10月初可能下雪</strong>，独库注意暗冰</li>
+      <li><strong>紧急电话</strong>：12122（路况）/ 110 / 120</li>
     </ol>
+  </div>
+</section>
+
+<!-- 预算 -->
+<section class="section">
+  <h2 class="section-title">💰 预算（人均舒适型）</h2>
+  <div class="card">
+    <table>
+      <tr><th>项目</th><th>费用</th></tr>
+      <tr><td>北京↔乌鲁木齐机票</td><td>¥2,500→3,500</td></tr>
+      <tr><td>乌鲁木齐→阿勒泰机票</td><td>¥300→500</td></tr>
+      <tr><td>租车+油费（2人分摊）</td><td>¥4,000→5,000</td></tr>
+      <tr><td>住宿13晚</td><td>¥3,500→5,000</td></tr>
+      <tr><td>餐饮13天</td><td>¥2,100→3,500</td></tr>
+      <tr><td>门票+区间车</td><td>约¥1,000</td></tr>
+      <tr><td>活动（骑马+骑行+直升机等）</td><td>¥1,500→2,500</td></tr>
+      <tr style="font-weight:700;background:var(--gold-light)"><td>总计</td><td>¥15,000→21,000</td></tr>
+    </table>
   </div>
 </section>
 
 </div>
 
-<div class="footer">
-  🏔️ 北疆 13 日深度旅行攻略 · 2026 中秋国庆<br>
-  祝旅途愉快！🍂✨
-</div>
+<div class="footer">🏔️ 北疆13日深度旅行攻略 · 方案B · 2026中秋国庆<br>祝旅途愉快！🍂✨</div>
 
 <script>
-(function() {
-  const map = L.map('map', { center: [45.8, 84.5], zoom: 6, zoomControl: true });
+function tog(h){h.nextElementSibling.classList.toggle('open')}
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 12
-  }).addTo(map);
+// Map
+(function(){
+var map = L.map('map',{center:[47.0,86.0],zoom:6,zoomControl:true});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:12}).addTo(map);
 
-  // Route polyline (approximate)
-  const routeCoords = [
-    [43.8256, 87.6168], [43.8845, 88.1285], [44.2, 88.5], [44.8, 89.0], [45.5, 89.5],
-    [46.9947, 89.5256], [47.211, 90.219], [47.2, 89.0], [47.4, 87.5],
-    [47.7019, 86.8749], [48.0, 87.0], [48.693, 87.031],
-    [48.569, 87.237], [48.0, 87.0], [47.7, 86.87],
-    [47.0, 86.5], [46.5, 86.0], [46.098, 85.72],
-    [45.5, 85.0], [45.0, 84.0], [44.8, 82.5],
-    [44.61, 81.15], [44.1, 81.5], [43.9167, 81.3167],
-    [43.5, 82.5], [43.4, 84.0], [43.432, 84.055],
-    [43.5, 84.5], [44.0, 85.0], [44.5, 86.0], [44.0, 87.0],
-    [43.8256, 87.6168]
-  ];
+// Route polyline (new Plan B route - fly to Altay, skip Tianchi/Koktokay)
+var route = [
+  [43.8256,87.6168], // 乌鲁木齐
+  [47.45,87.0833],   // 阿勒泰机场(飞行)
+  [47.7019,86.8749], // 布尔津
+  [48.0,87.0],       // 中间
+  [48.693,87.031],   // 喀纳斯
+  [48.569,87.237],   // 禾木
+  [48.0,87.0],
+  [47.7,86.87],      // 布尔津
+  [47.0,86.5],[46.5,86.0],
+  [46.098,85.72],    // 乌尔禾
+  [45.5,85.0],[45.0,84.0],[44.8,82.5],
+  [44.61,81.15],     // 赛里木湖
+  [44.1,81.5],[43.9167,81.3167], // 伊宁
+  [43.5,82.5],[43.4,84.0],
+  [43.432,84.055],   // 那拉提
+  [43.5,84.5],       // 独库
+  [44.0,85.0],[44.5,86.0],[44.0,87.0],
+  [43.8256,87.6168]  // 乌鲁木齐
+];
+L.polyline(route,{color:'#3B7DD8',weight:3,opacity:0.6,dashArray:'8,6'}).addTo(map);
 
-  L.polyline(routeCoords, { color: '#3B7DD8', weight: 3, opacity: 0.6, dashArray: '8, 6' }).addTo(map);
+// Day markers
+var pts = [
+  {d:'D1',c:[43.8256,87.6168],n:'乌鲁木齐',m:'D1 9/25 抵达·大巴扎·领馆巷'},
+  {d:'D2',c:[47.7019,86.8749],n:'布尔津',m:'D2 9/26 ✈️飞阿勒泰→五彩滩→冷水鱼'},
+  {d:'D3',c:[48.693,87.031],n:'⭐喀纳斯',m:'D3 9/27 观鱼台·星空'},
+  {d:'D4',c:[48.693,87.031],n:'🔥喀纳斯',m:'D4 9/28 晨雾+三湾+🛶皮划艇'},
+  {d:'D5',c:[48.569,87.237],n:'⭐禾木',m:'D5 9/29 禾木·哈登日落'},
+  {d:'D6',c:[48.569,87.237],n:'🔥禾木',m:'D6 9/30 🐎骑马穿越美丽峰'},
+  {d:'D7',c:[48.569,87.237],n:'👋禾木',m:'D7 10/1 禾木放空+朋友离队'},
+  {d:'D8',c:[46.098,85.72],n:'乌尔禾',m:'D8 10/2 魔鬼城日落'},
+  {d:'D9',c:[44.61,81.15],n:'⭐赛湖',m:'D9 10/3 赛湖·星空'},
+  {d:'D10',c:[44.61,81.15],n:'🔥赛湖',m:'D10 10/4 🚴骑行+🚁/🎈'},
+  {d:'D11',c:[43.432,84.055],n:'那拉提',m:'D11 10/5 伊宁→那拉提'},
+  {d:'D12',c:[43.8256,87.6168],n:'乌鲁木齐',m:'D12 10/6 独库公路'},
+  {d:'D13',c:[43.8256,87.6168],n:'🏡到家',m:'D13 10/7 ✈️北京'}
+];
 
-  // Day markers
-  const points = [
-    { d: 'D1', coord: [43.8256, 87.6168], name: '乌鲁木齐', msg: 'D1 9/25 抵达·大巴扎' },
-    { d: 'D2', coord: [46.9947, 89.5256], name: '富蕴', msg: 'D2 9/26 天池→富蕴' },
-    { d: 'D3', coord: [47.7019, 86.8749], name: '布尔津', msg: 'D3 9/27 可可托海→五彩滩' },
-    { d: 'D4', coord: [48.693, 87.031], name: '⭐喀纳斯', msg: 'D4 9/28 观鱼台·星空' },
-    { d: 'D5', coord: [48.693, 87.031], name: '🔥喀纳斯', msg: 'D5 9/29 晨雾+三湾+🛶皮划艇' },
-    { d: 'D6', coord: [48.569, 87.237], name: '⭐禾木', msg: 'D6 9/30 禾木·哈登日落' },
-    { d: 'D7', coord: [48.569, 87.237], name: '🔥禾木', msg: 'D7 10/1 🐎骑马+朋友离队' },
-    { d: 'D8', coord: [46.098, 85.72], name: '乌尔禾', msg: 'D8 10/2 魔鬼城日落' },
-    { d: 'D9', coord: [44.61, 81.15], name: '⭐赛湖', msg: 'D9 10/3 赛湖·星空' },
-    { d: 'D10', coord: [44.61, 81.15], name: '🔥赛湖', msg: 'D10 10/4 🚴骑行+🚁/🎈' },
-    { d: 'D11', coord: [43.432, 84.055], name: '那拉提', msg: 'D11 10/5 伊宁→那拉提' },
-    { d: 'D12', coord: [43.8256, 87.6168], name: '乌鲁木齐', msg: 'D12 10/6 独库公路' },
-    { d: 'D13', coord: [43.8256, 87.6168], name: '🏡到家', msg: 'D13 10/7 ✈️北京' }
-  ];
-
-  points.forEach(p => {
-    const isHighlight = p.d.startsWith('D4')||p.d.startsWith('D5')||p.d.startsWith('D6')||p.d.startsWith('D7')||p.d.startsWith('D9')||p.d.startsWith('D10');
-    const color = isHighlight ? '#D4A02B' : '#2D5016';
-    const r = isHighlight ? 12 : 9;
-    const m = L.circleMarker(p.coord, { radius: r, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.9 }).addTo(map);
-    m.bindPopup(`<b>${p.d} ${p.name}</b><br>${p.msg}`);
-    m.bindTooltip(p.d, { permanent: false, direction: 'top' });
-    m.on('click', () => {
-      const el = document.getElementById(p.d.toLowerCase());
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    });
+pts.forEach(function(p){
+  var hl = p.d=='D3'||p.d=='D4'||p.d=='D5'||p.d=='D6'||p.d=='D7'||p.d=='D9'||p.d=='D10';
+  var clr = hl ? '#D4A02B' : '#2D5016';
+  var r = hl ? 12 : 9;
+  var m = L.circleMarker(p.c,{radius:r,fillColor:clr,color:'#fff',weight:2,fillOpacity:0.9}).addTo(map);
+  m.bindPopup('<b>'+p.d+' '+p.n+'</b><br>'+p.m);
+  m.bindTooltip(p.d,{permanent:false,direction:'top'});
+  m.on('click',function(){
+    var el = document.getElementById(p.d.toLowerCase());
+    if(el) el.scrollIntoView({behavior:'smooth'});
   });
+});
 
-  map.fitBounds(L.polyline(routeCoords).getBounds().pad(0.12));
+// Flight marker for Urumqi -> Altay
+var flightIcon = L.divIcon({
+  html: '✈️',
+  className: '',
+  iconSize: [24,24],
+  iconAnchor: [12,12]
+});
+L.marker([45.6,87.3],{icon:flightIcon}).addTo(map).bindPopup('✈️ 乌鲁木齐→阿勒泰（飞行1h）');
+
+map.fitBounds(L.polyline(route).getBounds().pad(0.12));
 })();
 </script>
-
 </body>
 </html>
